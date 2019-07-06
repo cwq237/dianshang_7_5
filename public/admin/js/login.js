@@ -22,6 +22,9 @@ $(function () {
             min:3,
             max:9,
             message:'用户名长度必须是3-9位'
+          },
+          callback:{
+            message:'用户名错误'
           }
         }
       },
@@ -34,6 +37,9 @@ $(function () {
             min:6,
             max:12,
             message:'用户名长度必须是6-12位'
+          },
+          callback:{
+            message:'密码错误'
           }
         }
       }
@@ -57,7 +63,19 @@ $(function () {
       data:$form.serialize(),
       success:function(info){
         if(info.error===1000){
-          alert('用户名不存在')
+          // 调用 updateStatus 把 username 改成失败状态 
+          // 参数1 :  修改哪个字段
+          // 参数2 :  修改的状态
+          // 参数3 :  指定显示哪个错误信息
+          $form.data('bootstrapValidator').updateStatus('username','INVALID','callback')
+        }
+        
+        if(info.error===1001){
+          // 调用 updateStatus 把 password 改成失败状态 
+          // 参数1 :  修改哪个字段
+          // 参数2 :  修改的状态
+          // 参数3 :  指定显示哪个错误信息
+          $form.data('bootstrapValidator').updateStatus('password','INVALID','callback')
         }
         if(info.success){
           // 登录成功
@@ -65,5 +83,11 @@ $(function () {
         }
       }
     })
+  })
+
+  // 表单重置功能,ture可传可不传,因为reset有清空内容的功能
+  $('[type=reset]').on('click',function(){
+    // 调用表单插件的resetform的方法
+    $form.data('bootstrapValidator').resetForm(true)
   })
 })
